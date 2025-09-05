@@ -1,3 +1,10 @@
 bin/
 .settings/
 legacy/
+.project
+.classpath
+.idea
+target
+.build
+.project
+Hodoku.iml
