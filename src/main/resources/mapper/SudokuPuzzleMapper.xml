@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hodoku.mapper.SudokuPuzzleMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="SudokuPuzzleResultMap" type="com.hodoku.dto.SudokuPuzzle">
+        <id property="id" column="id"/>
+        <result property="puzzle" column="puzzle"/>
+        <result property="solution" column="solution"/>
+        <result property="level" column="level"/>
+        <result property="description" column="description"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <!-- 根据难度级别查询数独题目 -->
+    <select id="findByLevel" resultMap="SudokuPuzzleResultMap">
+        SELECT id, puzzle, solution, level, description, create_time, update_time
+        FROM sudoku_puzzles
+        WHERE level = #{level}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据ID查询数独题目 -->
+    <select id="findById" resultMap="SudokuPuzzleResultMap">
+        SELECT id, puzzle, solution, level, description, create_time, update_time
+        FROM sudoku_puzzles
+        WHERE id = #{id}
+    </select>
+
+    <!-- 保存数独题目 -->
+    <insert id="savePuzzle" parameterType="com.hodoku.dto.SudokuPuzzle" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sudoku_puzzles (puzzle, solution, level, description, create_time, update_time)
+        VALUES (#{puzzle}, #{solution}, #{level}, #{description}, NOW(), NOW())
+    </insert>
+
+    <!-- 更新数独题目 -->
+    <update id="updatePuzzle" parameterType="com.hodoku.dto.SudokuPuzzle">
+        UPDATE sudoku_puzzles
+        SET puzzle = #{puzzle},
+            solution = #{solution},
+            level = #{level},
+            description = #{description},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除数独题目 -->
+    <delete id="deletePuzzle">
+        DELETE FROM sudoku_puzzles WHERE id = #{id}
+    </delete>
+
+</mapper>

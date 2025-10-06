@@ -4,7 +4,6 @@ import com.hodoku.dto.SolutionStepResponse;
 import com.hodoku.dto.SolveResponse;
 import com.hodoku.dto.SudokuHintRequest;
 import com.hodoku.dto.SudokuRequest;
-import generator.BackgroundGenerator;
 import generator.BackgroundGeneratorThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class SudokuService {
-    private final static Logger logger = LoggerFactory.getLogger(SudokuService.class);
+public class SudokuPuzzleService {
+    private final static Logger logger = LoggerFactory.getLogger(SudokuPuzzleService.class);
 
     public String getSudoku(SudokuRequest request) {
         GameMode mode = GameMode.valueOf(request.getGameMode());

@@ -1,7 +1,7 @@
 package com.hodoku.controller;
 
 import com.hodoku.dto.*;
-import com.hodoku.service.SudokuService;
+import com.hodoku.service.SudokuPuzzleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +13,17 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/sudoku")
 @CrossOrigin(origins = "*")
-public class SudokuController {
-    private final static Logger logger = LoggerFactory.getLogger(SudokuController.class);
+public class SudokuPuzzleController {
+    private final static Logger logger = LoggerFactory.getLogger(SudokuPuzzleController.class);
     @Autowired
-    private SudokuService sudokuService;
+    private SudokuPuzzleService sudokuPuzzleService;
 
     @PostMapping("/get")
     public ResponseEntity<String> getSudoku(@RequestHeader Map<String, String> headers, @RequestBody SudokuRequest request) {
         //获取请求头Header
         String userId = headers.get("x-userid");
         request.setUserId(userId);
-        String sudoku = sudokuService.getSudoku(request);
+        String sudoku = sudokuPuzzleService.getSudoku(request);
 
         if (sudoku == null) {
             return ResponseEntity.noContent().build();
@@ -36,7 +36,7 @@ public class SudokuController {
         //获取请求头Header
         String userId = headers.get("x-userid");
         request.setUserId(userId);
-        SolutionStepResponse hint = sudokuService.getHint(request);
+        SolutionStepResponse hint = sudokuPuzzleService.getHint(request);
 
         if (hint == null) {
             return ResponseEntity.noContent().build();
@@ -47,7 +47,7 @@ public class SudokuController {
 
     @PostMapping("/solve")
     public ResponseEntity<SolveResponse> solve(@RequestBody SudokuSolveRequest request) {
-        SolveResponse solution = sudokuService.solve(request.getPuzzle());
+        SolveResponse solution = sudokuPuzzleService.solve(request.getPuzzle());
         return ResponseEntity.ok(solution);
     }
 

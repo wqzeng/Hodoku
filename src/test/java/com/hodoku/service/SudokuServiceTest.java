@@ -4,7 +4,6 @@ import com.hodoku.dto.SolutionStepResponse;
 import com.hodoku.dto.SudokuHintRequest;
 import com.hodoku.dto.SudokuRequest;
 import com.hodoku.util.SudokuCandidateGenerator;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SudokuServiceTest {
 
     @Autowired
-    private SudokuService sudokuService;
+    private SudokuPuzzleService sudokuPuzzleService;
 
     @Test
     void testGetSudokuWithSeed() {
@@ -26,7 +25,7 @@ class SudokuServiceTest {
         request.setUserId("testUser");
         request.setGameMode("PLAYING");
         request.setLevel("HARD");
-        String sudoku=sudokuService.getSudoku(request);
+        String sudoku= sudokuPuzzleService.getSudoku(request);
         System.out.println(sudoku);
     }
     @Test
@@ -36,7 +35,7 @@ class SudokuServiceTest {
         String puzzle = "000407000074000200800006047002000910080000000400350000003040100046800032718000000";
         SudokuHintRequest request = new SudokuHintRequest();
         request.setPuzzle(puzzle);
-        SolutionStepResponse response = sudokuService.getHint(request);
+        SolutionStepResponse response = sudokuPuzzleService.getHint(request);
 
         // 验证返回不为空
         assertNotNull(response, "Hint response should not be null");
@@ -57,7 +56,7 @@ class SudokuServiceTest {
 //        String puzzle = "5...4.127941372685..2...3948..4....6..5...9..1....9..33.....7...7..14..8.18.....9";
         SudokuHintRequest request = new SudokuHintRequest();
         request.setPuzzle(puzzle);
-        SolutionStepResponse response = sudokuService.getHint(request);
+        SolutionStepResponse response = sudokuPuzzleService.getHint(request);
 
         // 验证返回不为空
         assertNotNull(response, "Hint response should not be null");
@@ -89,7 +88,7 @@ class SudokuServiceTest {
         SudokuHintRequest request = new SudokuHintRequest();
         request.setPuzzle(puzzle);
         request.setCandidates(candidates);
-        SolutionStepResponse response = sudokuService.getHint(request);
+        SolutionStepResponse response = sudokuPuzzleService.getHint(request);
 
         // 验证返回不为空
         assertNotNull(response, "Hint response should not be null");
@@ -111,7 +110,7 @@ class SudokuServiceTest {
         String puzzle = "123456789456789123789123456214365897365897214897214365531642978642978531978531642";
         SudokuHintRequest request = new SudokuHintRequest();
         request.setPuzzle(puzzle);
-        SolutionStepResponse response = sudokuService.getHint(request);
+        SolutionStepResponse response = sudokuPuzzleService.getHint(request);
 
         // 验证返回为null（已解决的谜题没有提示）
         assertNull(response, "Hint response should be null for solved puzzle");
@@ -123,7 +122,7 @@ class SudokuServiceTest {
         String puzzle = "..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3..";
         SudokuHintRequest request = new SudokuHintRequest();
         request.setPuzzle(puzzle);
-        SolutionStepResponse response = sudokuService.getHint(request);
+        SolutionStepResponse response = sudokuPuzzleService.getHint(request);
         // 验证转换后的响应包含所有必要字段
         assertNotNull(response, "Response should not be null");
         assertNotNull(response.getType(), "Type should not be set");

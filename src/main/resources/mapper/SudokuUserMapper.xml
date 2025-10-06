@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hodoku.mapper.SudokuUserMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="SudokuUserResultMap" type="com.hodoku.dto.SudokuUser">
+        <id property="id" column="id"/>
+        <result property="openId" column="open_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="platform" column="platform"/>
+        <result property="loginIp" column="login_ip"/>
+        <result property="score" column="score"/>
+        <result property="levels" column="levels"/>
+        <result property="streakInfo" column="streak_info"/>
+        <result property="loginTimes" column="login_times"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <!-- 基础字段 -->
+    <sql id="Base_Column_List">
+        id, open_id, user_name, platform, login_ip, score, levels, streak_info, login_times, create_time, update_time
+    </sql>
+
+    <!-- 根据ID查询用户 -->
+    <select id="findById" resultMap="SudokuUserResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sudoku_users
+        WHERE id = #{id}
+    </select>
+
+    <!-- 根据openId查询用户 -->
+    <select id="findByOpenId" resultMap="SudokuUserResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sudoku_users
+        WHERE open_id = #{openId} order by id desc limit 1
+    </select>
+
+    <!-- 根据平台查询用户列表 -->
+    <select id="findByPlatform" resultMap="SudokuUserResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sudoku_users
+        WHERE platform = #{platform}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据用户名模糊查询 -->
+    <select id="findByUserNameLike" resultMap="SudokuUserResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sudoku_users
+        WHERE user_name LIKE CONCAT('%', #{userName}, '%')
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 查询所有用户 -->
+    <select id="findAll" resultMap="SudokuUserResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sudoku_users
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 分页查询用户 -->
+    <select id="findByPage" resultMap="SudokuUserResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sudoku_users
+        ORDER BY create_time DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 查询用户总数 -->
+    <select id="countAll" resultType="long">
+        SELECT COUNT(*) FROM sudoku_users
+    </select>
+
+    <!-- 根据平台查询用户数量 -->
+    <select id="countByPlatform" resultType="long">
+        SELECT COUNT(*) FROM sudoku_users WHERE platform = #{platform}
+    </select>
+
+    <!-- 新增用户 -->
+    <insert id="insert" parameterType="com.hodoku.dto.SudokuUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sudoku_users (
+            open_id, user_name, platform, login_ip, score, levels, streak_info, login_times
+        ) VALUES (
+            #{openId}, #{userName}, #{platform}, #{loginIp}, #{score},#{levels},#{streakInfo}, #{loginTimes}
+        )
+    </insert>
+
+    <!-- 批量新增用户 -->
+    <insert id="insertBatch" parameterType="list">
+        INSERT INTO sudoku_users (
+            open_id, user_name, platform, login_ip, score, levels, streak_info, login_times
+        ) VALUES
+        <foreach collection="users" item="user" separator=",">
+            (#{user.openId}, #{user.userName}, #{user.platform}, #{user.loginIp}, #{user.score},#{user.levels},#{user.streakInfo} #{user.loginTimes})
+        </foreach>
+    </insert>
+
+    <!-- 更新用户信息 -->
+    <update id="update" parameterType="com.hodoku.dto.SudokuUser">
+        UPDATE sudoku_users
+        SET user_name = #{userName},
+            platform = #{platform},
+            login_ip = #{loginIp},
+            score = #{score},
+            levels = #{levels},
+            streak_info = #{streakInfo},
+            login_times = #{loginTimes}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 选择性更新用户信息 -->
+    <update id="updateSelective" parameterType="com.hodoku.dto.SudokuUser">
+        UPDATE sudoku_users
+        <set>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="platform != null and platform != ''">
+                platform = #{platform},
+            </if>
+            <if test="loginIp != null and loginIp != ''">
+                login_ip = #{loginIp},
+            </if>
+            <if test="loginDate != null">
+                login_date = #{loginDate},
+            </if>
+            <if test="loginTimes != null">
+                login_times = #{loginTimes},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新用户登录信息 -->
+    <update id="updateLoginInfo">
+        UPDATE sudoku_users
+        SET login_ip = #{loginIp},
+            login_date = NOW(),
+            login_times = login_times + 1
+        WHERE open_id = #{openId}
+    </update>
+
+    <!-- 增加登录次数 -->
+    <update id="incrementLoginTimes">
+        UPDATE sudoku_users
+        SET login_times = login_times + 1,
+            login_date = NOW()
+        WHERE open_id = #{openId}
+    </update>
+
+    <!-- 根据ID删除用户 -->
+    <delete id="deleteById">
+        DELETE FROM sudoku_users WHERE id = #{id}
+    </delete>
+
+    <!-- 根据openId删除用户 -->
+    <delete id="deleteByOpenId">
+        DELETE FROM sudoku_users WHERE open_id = #{openId}
+    </delete>
+
+    <!-- 批量删除用户 -->
+    <delete id="deleteBatch">
+        DELETE FROM sudoku_users WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 根据平台删除用户 -->
+    <delete id="deleteByPlatform">
+        DELETE FROM sudoku_users WHERE platform = #{platform}
+    </delete>
+
+</mapper>

@@ -3,7 +3,7 @@ Pack 5 - Web Illustrations
 
 Hints:
   Background: Gradient Border
-  Symbols: Normal weiﬂ (z.T. 75%)
+  Symbols: Normal wei√ü (z.T. 75%)
 
 Digits:
   Symbols: Gradient Black mit Schatten

@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: hodoku-api
+
+  profiles:
+    active: @spring.profiles.active@
+
+  jackson:
+    serialization:
+      indent-output: true
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /hodoku
+
+logging:
+  level:
+    solver: INFO
+    sudoku: INFO
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.hodoku.dto
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
