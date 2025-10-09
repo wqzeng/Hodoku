@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hodoku.mapper.SudokuMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="SudokuResultMap" type="com.hodoku.dto.Sudoku">
+        <id property="id" column="id"/>
+        <result property="openId" column="open_id"/>
+        <result property="gameMode" column="game_mode"/>
+        <result property="difficulty" column="difficulty"/>
+        <result property="index" column="index"/>
+        <result property="puzzle" column="puzzle"/>
+        <result property="candidates" column="candidates"/>
+        <result property="timeElapsed" column="time_elapsed"/>
+        <result property="status" column="status"/>
+        <result property="missCount" column="miss_count"/>
+        <result property="hintCount" column="hint_count"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <!-- 插入数独游戏进度 -->
+    <insert id="insertSudoku" parameterType="com.hodoku.dto.Sudoku" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sudoku (open_id, game_mode, difficulty, index, puzzle, candidates, time_elapsed, status, miss_count, hint_count, create_time, update_time)
+        VALUES (#{openId}, #{gameMode}, #{difficulty}, #{index}, #{puzzle}, #{candidates}, #{timeElapsed}, #{status}, #{missCount}, #{hintCount}, NOW(), NOW())
+    </insert>
+
+    <!-- 根据ID查询数独游戏进度 -->
+    <select id="findById" resultMap="SudokuResultMap">
+        SELECT id, open_id, game_mode, difficulty, index, puzzle, candidates, time_elapsed, status, miss_count, hint_count, create_time, update_time
+        FROM sudoku
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByIndex" resultMap="SudokuResultMap">
+        SELECT id, open_id, game_mode, difficulty, index, puzzle, candidates, time_elapsed, status, miss_count, hint_count, create_time, update_time
+        FROM sudoku
+        WHERE open_id = #{openId} and game_mode = #{gameMode} and difficulty = #{difficulty} and index = #{index}
+    </select>
+
+    <!-- 根据openId查询数独游戏进度列表 -->
+    <select id="findByOpenId" resultMap="SudokuResultMap">
+        SELECT id, open_id, game_mode, difficulty, index, puzzle, candidates, time_elapsed, status, miss_count, hint_count, create_time, update_time
+        FROM sudoku
+        WHERE open_id = #{openId}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 更新数独游戏进度 -->
+    <update id="updateSudoku" parameterType="com.hodoku.dto.Sudoku">
+        UPDATE sudoku
+        SET open_id = #{openId},
+            game_mode = #{gameMode},
+            difficulty = #{difficulty},
+            index = #{index},
+            puzzle = #{puzzle},
+            candidates = #{candidates},
+            time_elapsed = #{timeElapsed},
+            status = #{status},
+            miss_count = #{missCount},
+            hint_count = #{hintCount},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据ID删除数独游戏进度 -->
+    <delete id="deleteSudoku">
+        DELETE FROM sudoku WHERE id = #{id}
+    </delete>
+
+    <!-- 查询不同模式数独游戏进度 -->
+    <select id="findByGameMode" resultMap="SudokuResultMap">
+        SELECT id, open_id, game_mode, difficulty, index, puzzle, candidates, time_elapsed, status, miss_count, hint_count, create_time, update_time
+        FROM sudoku where open_id = #{openId} and game_mode = #{gameMode}
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>

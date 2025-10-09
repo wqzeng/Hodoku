@@ -1,6 +1,7 @@
 package com.hodoku.service;
 
 import com.hodoku.dto.SolutionStepResponse;
+import com.hodoku.dto.Sudoku;
 import com.hodoku.dto.SudokuHintRequest;
 import com.hodoku.dto.SudokuRequest;
 import com.hodoku.util.SudokuCandidateGenerator;
@@ -8,12 +9,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class SudokuServiceTest {
+public class SudokuServiceTest {
 
     @Autowired
     private SudokuPuzzleService sudokuPuzzleService;
@@ -133,5 +136,38 @@ class SudokuServiceTest {
         assertFalse(response.getCells().isEmpty(), "Cells list should not be empty");
         assertNotNull(response.getCandidatesToDelete(), "Candidates list should not be null");
         assertTrue(response.getCandidatesToDelete().isEmpty(), "Candidates list should not be empty");
+    }
+
+    @Test
+    public void testSudokuEntity() {
+        // 测试实体类创建
+        Sudoku sudoku = new Sudoku();
+        sudoku.setId(1L);
+        sudoku.setOpenId("test_open_id");
+        sudoku.setGameMode("classic");
+        sudoku.setDifficulty("medium");
+        sudoku.setIndex("level_1");
+        sudoku.setPuzzle("530070000600195000098000060800060003400803001700020006060000280000419005000080079");
+        sudoku.setCandidates("123456789");
+        sudoku.setTimeElapsed(new Date());
+        sudoku.setStatus(1);
+        sudoku.setMissCount(0);
+        sudoku.setHintCount(2);
+        sudoku.setCreateTime(new Date());
+        sudoku.setUpdateTime(new Date());
+
+        // 验证getter方法
+        assert sudoku.getId() == 1L;
+        assert "test_open_id".equals(sudoku.getOpenId());
+        assert "classic".equals(sudoku.getGameMode());
+        assert "medium".equals(sudoku.getDifficulty());
+        assert "level_1".equals(sudoku.getIndex());
+        assert "530070000600195000098000060800060003400803001700020006060000280000419005000080079".equals(sudoku.getPuzzle());
+        assert "123456789".equals(sudoku.getCandidates());
+        assert sudoku.getStatus() == 1;
+        assert sudoku.getMissCount() == 0;
+        assert sudoku.getHintCount() == 2;
+
+        System.out.println("Sudoku entity test passed: " + sudoku.toString());
     }
 }
