@@ -23,6 +23,7 @@ public class SudokuPuzzleController {
         //获取请求头Header
         String userId = headers.get("x-userid");
         request.setUserId(userId);
+        logger.info("headers={}", headers);
         String sudoku = sudokuPuzzleService.getSudoku(request);
 
         if (sudoku == null) {
@@ -36,6 +37,7 @@ public class SudokuPuzzleController {
         //获取请求头Header
         String userId = headers.get("x-userid");
         request.setUserId(userId);
+        logger.info("headers={}", headers);
         SolutionStepResponse hint = sudokuPuzzleService.getHint(request);
 
         if (hint == null) {

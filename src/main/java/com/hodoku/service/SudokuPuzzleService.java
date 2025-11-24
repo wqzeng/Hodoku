@@ -4,6 +4,7 @@ import com.hodoku.dto.SolutionStepResponse;
 import com.hodoku.dto.SolveResponse;
 import com.hodoku.dto.SudokuHintRequest;
 import com.hodoku.dto.SudokuRequest;
+import generator.BackgroundGenerator;
 import generator.BackgroundGeneratorThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

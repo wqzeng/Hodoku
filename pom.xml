@@ -22,6 +22,7 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <tomcat.version>9.0.109</tomcat.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <!-- 默认激活本地环境 -->
@@ -47,7 +48,13 @@
                 <spring.profiles.active>pro</spring.profiles.active>
             </properties>
         </profile>
-
+        <!-- 腾讯云ubuntu生产环境 -->
+        <profile>
+            <id>ubuntu</id>
+            <properties>
+                <spring.profiles.active>ubuntu</spring.profiles.active>
+            </properties>
+        </profile>
     </profiles>
 
     <dependencies>
